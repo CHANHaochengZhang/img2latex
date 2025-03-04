@@ -6,7 +6,7 @@ I want to crate a simple tool, no showy UI, no any useless animation, so it look
 This is still in developing. So it may have some bugs or issues. If you find one or want new features, please tell me.
 
 ## Usage
-You can delay it in another device.
+You can delay it in other device.
 
 First, you need install [Ollama](https://ollama.com/). It doesn't matter that you use in Docker container or in host, because I use cURL, rather than Python package `ollama`.
 >Now I use [llama3.2-vision](https://ollama.com/library/llama3.2-vision) to implement this tool. I will finetune a model or find a better model to do it, you can know why in "Performance".
@@ -36,7 +36,13 @@ go run main.go
 ```
 
 ### In browser
-Now you can use it in browser, link is [http://169.254.2.7:8080](http://169.254.2.7:8080):
+Now you can use it in browser, link is http://localhost:8080, or http://<IP-Address>:8080 when you run it in other device:
+
+
+
+https://github.com/user-attachments/assets/a64b4611-b976-4b1f-be2d-2fe9fdf415ee
+
+
 
 If you want to upload new image, please refresh page.
 
