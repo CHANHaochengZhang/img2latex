@@ -36,7 +36,7 @@ go run main.go
 ```
 
 ### In browser
-Now you can use it in browser, link is http://localhost:8080, or http://<IP-Address>:8080 when you run it in other device:
+Now you can use it in browser, link is http://localhost:8080, or `http://<IP-Address>:8080` when you run it in other device:
 
 
 
