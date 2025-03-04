@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop File Upload</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: #ffffff; /* White background */
+        }
+        #dropZone {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #666;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: border-color 0.3s, color 0.3s;
+        }
+        #dropZone.active {
+            border-color: #007bff;
+            color: #007bff;
+        }
+        #dropZone.uploaded {
+            border-color: #28a745;
+            color: #28a745;
+            cursor: default;
+        }
+        #runButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ccc; /* Gray background */
+            color: #666;
+            border: none;
+            border-radius: 5px;
+        }
+        #runButton.enabled {
+            background-color: #007bff; /* Blue background */
+            color: white;
+        }
+        #runButton:disabled {
+            cursor: not-allowed;
+        }
+        #outputBox {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: monospace; /* Use monospaced font */
+            white-space: pre-wrap; /* Preserve newlines */
+            resize: none; /* Disable resizing */
+        }
+    </style>
+</head>
+<body>
+    <div id="dropZone">Drag and drop file here</div>
+    <button id="runButton" disabled>Run Python Script</button>
+    <textarea id="outputBox" readonly></textarea>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const runButton = document.getElementById('runButton');
+        const outputBox = document.getElementById('outputBox');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('active');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('active');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+            const files = e.dataTransfer.files;
+
+            if (files.length === 0) {
+                alert("No file was dragged!");
+                return;
+            }
+
+            const file = files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            dropZone.textContent = "Uploading file...";
+            dropZone.classList.add('active');
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                dropZone.textContent = data;
+                dropZone.classList.remove('active');
+                dropZone.classList.add('uploaded');
+                runButton.disabled = false; // Enable the script execution button
+                runButton.classList.add('enabled'); // Add enabled style
+            })
+            .catch(error => {
+                dropZone.textContent = "Upload failed, please try again!";
+                dropZone.classList.remove('active');
+                console.error('Error:', error);
+            });
+        });
+
+        runButton.addEventListener('click', () => {
+            runButton.disabled = true; // Disable button
+            runButton.classList.remove('enabled'); // Remove enabled style
+            outputBox.value = "Running script, please wait...";
+
+            fetch('/run-python', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    outputBox.value = data.returnLatex; // Display returned LateX Code
+                } else {
+                    outputBox.value = "Script execution failed: " + data.error;
+                    alert("Python script execution failed: " + data.error);
+                }
+            })
+            .catch(error => {
+                outputBox.value = "Script execution failed, please check backend logs.";
+                alert("Python script execution failed!");
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
