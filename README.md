@@ -46,6 +46,20 @@ https://github.com/user-attachments/assets/a64b4611-b976-4b1f-be2d-2fe9fdf415ee
 
 If you want to upload new image, please refresh page.
 
+### Compile into a binary
+You can use below command to build entire project to a binary (excluding Ollama):
+
+```
+go build -o bin/img2latex
+```
+
+Now you can using it like a program:
+
+```
+./bin/img2latex 
+Server started at http://<IP-Address>:8080
+```
+
 ### In terminal(CLI)
 Run command below:
 
