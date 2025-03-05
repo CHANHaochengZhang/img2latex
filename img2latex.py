@@ -10,7 +10,11 @@ import pandas as pd
 from io import StringIO
 
 url = 'http://localhost:11434/api/chat'
-img_url = "./uploads/up_file"
+img_url = ""
+if len(sys.argv)==1:
+    img_url = "./uploads/up_file"
+else:
+    img_url = sys.argv[1]
     
 prompt = "Just formulas, no any others, just give me the latex codes of the formulas in image"
 
